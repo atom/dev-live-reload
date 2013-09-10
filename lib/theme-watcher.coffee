@@ -1,7 +1,6 @@
+_ = require 'underscore'
 File = require 'file'
 Directory = require 'directory'
-
-### Internal ###
 
 module.exports =
 class ThemeWatcher
@@ -29,13 +28,13 @@ class ThemeWatcher
     @theme.loadStylesheet(stylesheetPath)
 
   createEntities: ->
-    @entities.push(new Directory(theme.stylesheetPath)) unless theme.isFile()
-    for stylesheet in theme.stylesheets
+    @entities.push(new Directory(@theme.stylesheetPath)) unless @theme.isFile()
+    for stylesheet in @theme.stylesheets
       @entities.push(new File(stylesheet))
     @entities
 
   watchEntity: (entity) ->
-    reloadFn = _.bind(@reloadStylesheet, this, entity.getPath())
+    reloadFn = _.bind(@loadStylesheet, this, entity.getPath())
     entity.on 'contents-changed.dev-live-reload', reloadFn
     entity.on 'removed.dev-live-reload', reloadFn
     entity.on 'moved.dev-live-reload', reloadFn

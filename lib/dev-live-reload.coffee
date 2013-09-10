@@ -1,5 +1,7 @@
-Project = require 'project'
+UIWatcher = require './ui-watcher'
 
 module.exports =
   activate: (state) ->
-    # do stuff
+    new UIWatcher
+      themeManager: atom.themes
+
