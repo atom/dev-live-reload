@@ -1,0 +1,21 @@
+{
+  "name": "dev-live-reload",
+  "main": "./lib/dev-live-reload",
+  "version": "0.1.0",
+  "description": "Live reload atom themes and packages.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atom/dev-live-reload.git"
+  },
+  "dependencies": {
+  },
+  "bugs": {
+    "url": "https://github.com/atom/dev-live-reload/issues"
+  },
+  "engines": {
+    "atom": "*"
+  },
+  "publishConfig": {
+    "registry": "https://atom.iriscouch.com/registry/_design/app/_rewrite"
+  }
+}
