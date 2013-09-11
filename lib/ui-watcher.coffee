@@ -1,20 +1,36 @@
-ThemeWatcher = require './theme-watcher'
 BaseThemeWatcher = require './base-theme-watcher'
+ThemeWatcher = require './theme-watcher'
+PackageWatcher = require './package-watcher'
 
 module.exports =
 class UIWatcher
   constructor: ({@themeManager}) ->
-    @baseTheme = new BaseThemeWatcher()
-    for theme in @themeManager.getActiveThemes()
-      @createThemeWatcher(theme)
-    @themeManager.on 'theme-activated', (theme) =>
-      @createThemeWatcher(theme)
+    @watchers = []
+    @baseTheme = @createWatcher(BaseThemeWatcher)
+    @watchThemes()
+    @watchPackages()
 
-  createThemeWatcher: (theme) ->
-    watcher = new ThemeWatcher(theme)
+  watchThemes: ->
+    for theme in @themeManager.getActiveThemes()
+      @createWatcher(ThemeWatcher, theme)
+
+    @themeManager.on 'theme-activated', (theme) =>
+      @createWatcher(ThemeWatcher, theme)
+
+  watchPackages: ->
+    for pack in atom.getActivePackages()
+      console.log pack
+      @createWatcher(PackageWatcher, pack) if PackageWatcher.supportsPackage(pack)
+
+  createWatcher: (type, object) ->
+    watcher = new type(object)
     watcher.on 'globals-changed', @reloadAll
+    watcher.on 'destroyed', =>
+      @watchers = _.without(@watchers, watcher)
+    @watchers.push(watcher)
     watcher
 
   reloadAll: =>
     @baseTheme.reloadStylesheet()
-    theme.load() for theme in atom.themes.getThemes()
+    theme.load() for theme in atom.themes.getActiveThemes()
+    pack.reloadStylesheets() for pack in atom.getActivePackages() when PackageWatcher.supportsPackage(pack)
