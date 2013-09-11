@@ -10,10 +10,6 @@ class ThemeWatcher extends Watcher
     @theme.on 'deactivated', @destroy
     @watch()
 
-  destroy: =>
-    super()
-    @theme = null
-
   watch: ->
     unless @theme.isFile()
       themePath = @theme.getPath()
