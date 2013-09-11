@@ -4,7 +4,7 @@ ThemeManager = require 'theme-manager'
 
 UIWatcher = require '../lib/ui-watcher.coffee'
 
-fdescribe "UIWatcher", ->
+describe "UIWatcher", ->
   themeManager = null
   uiWatcher = null
 

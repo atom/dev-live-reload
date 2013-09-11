@@ -6,7 +6,7 @@ Theme = require 'theme'
 
 ThemeWatcher = require '../lib/theme-watcher.coffee'
 
-fdescribe "ThemeWatcher", ->
+describe "ThemeWatcher", ->
   theme = null
   watcher = null
 
