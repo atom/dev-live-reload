@@ -10,15 +10,14 @@ describe "ThemeWatcher", ->
   theme = null
   watcher = null
 
+  afterEach ->
+    theme.deactivate() if theme?
+
   describe "when the theme does not have ui-variables", ->
     beforeEach ->
       themePath = project.resolve('themes/theme-with-package-file')
       theme = new Theme(themePath)
-      theme.load()
       watcher = new ThemeWatcher(theme)
-
-    afterEach ->
-      theme.deactivate()
 
     it "does not have a ui-variables entity", ->
       entity = null
@@ -30,11 +29,7 @@ describe "ThemeWatcher", ->
     beforeEach ->
       themePath = project.resolve('themes/theme-with-ui-variables')
       theme = new Theme(themePath)
-      theme.load()
       watcher = new ThemeWatcher(theme)
-
-    afterEach ->
-      theme.deactivate()
 
     describe "when file is updated", ->
       it "reloads applied css", ->

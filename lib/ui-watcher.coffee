@@ -5,9 +5,9 @@ module.exports =
 class UIWatcher
   constructor: ({@themeManager}) ->
     @baseTheme = new BaseThemeWatcher()
-    for theme in @themeManager.getLoadedThemes()
+    for theme in @themeManager.getActiveThemes()
       @createThemeWatcher(theme)
-    @themeManager.on 'theme-loaded', (theme) =>
+    @themeManager.on 'theme-activated', (theme) =>
       @createThemeWatcher(theme)
 
   createThemeWatcher: (theme) ->
