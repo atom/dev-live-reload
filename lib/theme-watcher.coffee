@@ -35,7 +35,6 @@ class ThemeWatcher
         @entities.push(global)
 
     for stylesheet in @theme.stylesheets
-      console.log stylesheet
       file = new File(stylesheet)
       @watchFileEntity(file)
       @entities.push(file)
