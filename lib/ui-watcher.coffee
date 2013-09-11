@@ -19,7 +19,6 @@ class UIWatcher
 
   watchPackages: ->
     for pack in atom.getActivePackages()
-      console.log pack
       @createWatcher(PackageWatcher, pack) if PackageWatcher.supportsPackage(pack)
 
   createWatcher: (type, object) ->
