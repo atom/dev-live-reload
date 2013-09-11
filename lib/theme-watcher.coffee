@@ -23,18 +23,19 @@ class ThemeWatcher
     @off()
 
   watchTheme: ->
+    themePath = @theme.getPath()
     unless @theme.isFile()
-      dir = new Directory(@theme.stylesheetPath)
+      dir = new Directory(themePath)
       @watchDirectoryEntity(dir)
       @entities.push(dir)
 
-      uiVarsPath = path.join(@theme.stylesheetPath, 'ui-variables.less')
+      uiVarsPath = path.join(themePath, 'ui-variables.less')
       if fs.existsSync(uiVarsPath)
         global = new File(uiVarsPath)
         @watchGlobalEntity(global)
         @entities.push(global)
 
-    for stylesheet in @theme.stylesheets
+    for stylesheet in @theme.getLoadedStylesheetPaths()
       file = new File(stylesheet)
       @watchFileEntity(file)
       @entities.push(file)
@@ -50,7 +51,7 @@ class ThemeWatcher
 
   watchDirectoryEntity: (entity) ->
     reloadFn = =>
-      for stylesheet in @theme.stylesheets
+      for stylesheet in @theme.getLoadedStylesheetPaths()
         @loadStylesheet(stylesheet)
     entity.on 'contents-changed.dev-live-reload', reloadFn
 
