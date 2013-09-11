@@ -16,6 +16,7 @@ class Watcher
     @unwatch()
     @entities = null
     @off()
+    @trigger('destroyed')
 
   watch: ->
     # override me
