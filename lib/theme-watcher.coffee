@@ -23,22 +23,15 @@ class ThemeWatcher
     @off()
 
   watchTheme: ->
-    themePath = @theme.getPath()
     unless @theme.isFile()
-      dir = new Directory(themePath)
-      @watchDirectoryEntity(dir)
-      @entities.push(dir)
+      themePath = @theme.getPath()
+      @watchDirectory(themePath)
 
       uiVarsPath = path.join(themePath, 'ui-variables.less')
-      if fs.existsSync(uiVarsPath)
-        global = new File(uiVarsPath)
-        @watchGlobalEntity(global)
-        @entities.push(global)
+      @watchGlobalFile(uiVarsPath) if fs.existsSync(uiVarsPath)
 
-    for stylesheet in @theme.getLoadedStylesheetPaths()
-      file = new File(stylesheet)
-      @watchFileEntity(file)
-      @entities.push(file)
+    @watchFile(stylesheet) for stylesheet in @theme.getLoadedStylesheetPaths()
+
     @entities
 
   unwatchTheme: ->
@@ -49,19 +42,22 @@ class ThemeWatcher
   loadStylesheet: (stylesheetPath) ->
     @theme.loadStylesheet(stylesheetPath)
 
-  watchDirectoryEntity: (entity) ->
-    reloadFn = =>
-      for stylesheet in @theme.getLoadedStylesheetPaths()
-        @loadStylesheet(stylesheet)
-    entity.on 'contents-changed.dev-live-reload', reloadFn
+  watchDirectory: (directoryPath) ->
+    entity = new Directory(directoryPath)
+    entity.on 'contents-changed.dev-live-reload', =>
+      @loadStylesheet(stylesheet) for stylesheet in @theme.getLoadedStylesheetPaths()
+    @entities.push(entity)
 
-  watchGlobalEntity: (entity) ->
+  watchGlobalFile: (filePath) ->
+    entity = new File(filePath)
     entity.on 'contents-changed.dev-live-reload', => @trigger('globals-changed')
+    @entities.push(entity)
 
-  watchFileEntity: (entity) ->
-    reloadFn = =>
-      @loadStylesheet(entity.getPath())
+  watchFile: (filePath) ->
+    reloadFn = => @loadStylesheet(entity.getPath())
 
+    entity = new File(filePath)
     entity.on 'contents-changed.dev-live-reload', reloadFn
     entity.on 'removed.dev-live-reload', reloadFn
     entity.on 'moved.dev-live-reload', reloadFn
+    @entities.push(entity)
