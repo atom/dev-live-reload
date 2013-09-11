@@ -1,28 +1,20 @@
-_ = require 'underscore'
 fs = require 'fs'
 path = require 'path'
-File = require 'file'
-Directory = require 'directory'
-EventEmitter = require 'event-emitter'
+
+Watcher = require './watcher'
 
 module.exports =
-class ThemeWatcher
-  _.extend @prototype, EventEmitter
-
-  theme: null
-  entities: []
-
+class ThemeWatcher extends Watcher
   constructor: (@theme) ->
+    super()
     @theme.on 'deactivated', @destroy
-    @watchTheme()
+    @watch()
 
   destroy: =>
-    @unwatchTheme()
+    super()
     @theme = null
-    @entities = null
-    @off()
 
-  watchTheme: ->
+  watch: ->
     unless @theme.isFile()
       themePath = @theme.getPath()
       @watchDirectory(themePath)
@@ -34,30 +26,8 @@ class ThemeWatcher
 
     @entities
 
-  unwatchTheme: ->
-    return unless @entities
-    for entity in @entities
-      entity.off '.dev-live-reload'
-
   loadStylesheet: (stylesheetPath) ->
     @theme.loadStylesheet(stylesheetPath)
 
-  watchDirectory: (directoryPath) ->
-    entity = new Directory(directoryPath)
-    entity.on 'contents-changed.dev-live-reload', =>
-      @loadStylesheet(stylesheet) for stylesheet in @theme.getStylesheetPaths()
-    @entities.push(entity)
-
-  watchGlobalFile: (filePath) ->
-    entity = new File(filePath)
-    entity.on 'contents-changed.dev-live-reload', => @trigger('globals-changed')
-    @entities.push(entity)
-
-  watchFile: (filePath) ->
-    reloadFn = => @loadStylesheet(entity.getPath())
-
-    entity = new File(filePath)
-    entity.on 'contents-changed.dev-live-reload', reloadFn
-    entity.on 'removed.dev-live-reload', reloadFn
-    entity.on 'moved.dev-live-reload', reloadFn
-    @entities.push(entity)
+  loadAllStylesheets: =>
+    @loadStylesheet(stylesheet) for stylesheet in @theme.getStylesheetPaths()

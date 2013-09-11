@@ -1,31 +1,23 @@
-_ = require 'underscore'
 fs = require 'fs'
 path = require 'path'
-File = require 'file'
+
+Watcher = require './watcher'
 
 module.exports =
-class BaseThemeWatcher
-  entities: []
-
-  constructor: (name) ->
+class BaseThemeWatcher extends Watcher
+  constructor: ->
+    super()
     @stylesheetsPath = path.dirname(window.resolveStylesheet('atom.less'))
     @watch()
-
-  reloadStylesheet: =>
-    atom.reloadBaseStylesheets()
 
   watch: ->
     filePaths = fs.readdirSync(@stylesheetsPath).filter (filePath) ->
       path.extname(filePath).indexOf('less') > -1
 
-    for filePath in filePaths
-      @watchFilePath(filePath)
+    @watchFile(filePath) for filePath in filePaths
 
-  watchFilePath: (filePath) ->
-    entity = new File(filePath)
-    @entities.push(entity)
+  loadStylesheet: ->
+    @loadAllStylesheets()
 
-    entity.on 'contents-changed.dev-live-reload', @reloadStylesheet
-    entity.on 'removed.dev-live-reload', @reloadStylesheet
-    entity.on 'moved.dev-live-reload', @reloadStylesheet
-
+  loadAllStylesheets: ->
+    atom.reloadBaseStylesheets()
