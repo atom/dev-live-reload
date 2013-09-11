@@ -1,5 +1,14 @@
 Dev Live Reload
 
-You edit styles and want them to magically update in the interface. This does that.
+This live reloads the atom LESS files. You edit styles and they are magically reflected in any running atom windows.
 
-* `meta-shift-ctrl-r` reloads all styles
+### Other
+
+* `meta-shift-ctrl-r` reloads all base + theme
+
+### TODO
+
+It is not quite complete. It still does not
+
+* Handle changes to package styles.
+* Handle file additions to a theme. New files will not be watched.
