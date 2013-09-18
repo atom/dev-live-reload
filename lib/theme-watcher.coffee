@@ -11,12 +11,11 @@ class ThemeWatcher extends Watcher
     @watch()
 
   watch: ->
-    unless @theme.isFile()
-      themePath = @theme.getPath()
-      @watchDirectory(themePath)
+    themePath = @theme.path
+    @watchDirectory(themePath)
 
-      uiVarsPath = path.join(themePath, 'ui-variables.less')
-      @watchGlobalFile(uiVarsPath) if fs.existsSync(uiVarsPath)
+    uiVarsPath = path.join(themePath, 'ui-variables.less')
+    @watchGlobalFile(uiVarsPath) if fs.existsSync(uiVarsPath)
 
     @watchFile(stylesheet) for stylesheet in @theme.getStylesheetPaths()
 
