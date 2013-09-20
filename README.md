@@ -4,11 +4,10 @@ This live reloads the atom LESS files. You edit styles and they are magically re
 
 ### Other
 
-* `meta-shift-ctrl-r` reloads all base + theme
+* `meta-shift-ctrl-r` reloads all base + packages
 
 ### TODO
 
 It is not quite complete. It still does not
 
-* Handle changes to package styles.
 * Handle file additions to a theme. New files will not be watched.
