@@ -39,3 +39,25 @@ describe "UIWatcher", ->
 
     it "does not create a PackageWatcher", ->
       expect(_.last(uiWatcher.watchers)).not.toBeInstanceOf PackageWatcher
+
+  describe "theme packages", ->
+    pack = null
+    beforeEach ->
+      atom.activatePackage("theme-with-multiple-imported-files")
+      pack = atom.getActivePackages()[0]
+      uiWatcher = new UIWatcher()
+
+    it "reloads the theme when anything within the theme changes", ->
+      spyOn(pack, 'reloadStylesheets')
+      spyOn(atom, 'reloadBaseStylesheets')
+
+      watcher = _.last(uiWatcher.watchers)
+
+      expect(watcher.entities.length).toBe 6
+
+      watcher.entities[2].trigger('contents-changed')
+      expect(pack.reloadStylesheets).toHaveBeenCalled()
+      expect(atom.reloadBaseStylesheets).not.toHaveBeenCalled()
+
+      _.last(watcher.entities).trigger('contents-changed')
+      expect(atom.reloadBaseStylesheets).toHaveBeenCalled()

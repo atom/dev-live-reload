@@ -3,6 +3,7 @@ UIWatcher = require './ui-watcher'
 
 module.exports =
   activate: (state) ->
+    uiWatcher = null
 
     # HACK: I need an actvation event when the ui or packages are all loaded.
     # It cant watch all the packages until they are all loaded.
