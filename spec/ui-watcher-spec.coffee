@@ -1,6 +1,5 @@
-_ = require 'underscore'
+{_} = require 'atom'
 path = require 'path'
-ThemeManager = require 'theme-manager'
 
 UIWatcher = require '../lib/ui-watcher.coffee'
 PackageWatcher = require '../lib/package-watcher.coffee'
@@ -11,21 +10,19 @@ describe "UIWatcher", ->
 
   describe "when a base theme's file changes", ->
     beforeEach ->
-      themeManager = new ThemeManager()
-      uiWatcher = new UIWatcher({ themeManager })
+      uiWatcher = new UIWatcher()
 
     it "reloads all the base styles", ->
       spyOn(atom, 'reloadBaseStylesheets')
 
-      uiWatcher.baseTheme.entities[1].trigger('contents-changed')
+      uiWatcher.baseTheme.entities[0].trigger('contents-changed')
 
       expect(atom.reloadBaseStylesheets).toHaveBeenCalled()
 
   describe "when a package stylesheet file changes", ->
     beforeEach ->
       atom.activatePackage("package-with-stylesheets-manifest")
-      themeManager = new ThemeManager()
-      uiWatcher = new UIWatcher({ themeManager })
+      uiWatcher = new UIWatcher()
 
     it "reloads all package styles", ->
       pack = atom.getActivePackages()[0]
@@ -38,8 +35,29 @@ describe "UIWatcher", ->
   describe "when a package does not have a stylesheet", ->
     beforeEach ->
       atom.activatePackage("package-with-index")
-      themeManager = new ThemeManager()
-      uiWatcher = new UIWatcher({ themeManager })
+      uiWatcher = new UIWatcher()
 
     it "does not create a PackageWatcher", ->
       expect(_.last(uiWatcher.watchers)).not.toBeInstanceOf PackageWatcher
+
+  describe "theme packages", ->
+    pack = null
+    beforeEach ->
+      atom.activatePackage("theme-with-multiple-imported-files")
+      pack = atom.getActivePackages()[0]
+      uiWatcher = new UIWatcher()
+
+    it "reloads the theme when anything within the theme changes", ->
+      spyOn(pack, 'reloadStylesheets')
+      spyOn(atom, 'reloadBaseStylesheets')
+
+      watcher = _.last(uiWatcher.watchers)
+
+      expect(watcher.entities.length).toBe 6
+
+      watcher.entities[2].trigger('contents-changed')
+      expect(pack.reloadStylesheets).toHaveBeenCalled()
+      expect(atom.reloadBaseStylesheets).not.toHaveBeenCalled()
+
+      _.last(watcher.entities).trigger('contents-changed')
+      expect(atom.reloadBaseStylesheets).toHaveBeenCalled()

@@ -1,12 +1,12 @@
-fsUtils = require 'fs-utils'
-AtomPackage = require 'atom-package'
+{_, fs} = require 'atom'
+path = require 'path'
 
 Watcher = require './watcher'
 
 module.exports =
 class PackageWatcher extends Watcher
   @supportsPackage: (pack) ->
-    pack instanceof AtomPackage and fsUtils.isDirectorySync(pack.getStylesheetsPath())
+    pack.getType() == 'atom' and fs.isDirectorySync(pack.getStylesheetsPath())
 
   constructor: (@pack) ->
     super()
@@ -14,11 +14,24 @@ class PackageWatcher extends Watcher
     @watch()
 
   watch: ->
-    @watchDirectory(@pack.getStylesheetsPath())
-    @watchFile(stylesheet) for stylesheet in @pack.getStylesheetPaths()
+    watchedPaths = []
+    watchPath = (stylesheet) =>
+      @watchFile(stylesheet) unless _.contains(watchedPaths, stylesheet)
+      watchedPaths.push(stylesheet)
+
+    stylesheetsPath = @pack.getStylesheetsPath()
+
+    @watchDirectory(stylesheetsPath)
+
+    watchPath(stylesheet) for stylesheet in @pack.getStylesheetPaths()
+
+    stylesheetPaths = (path.join(stylesheetsPath, p) for p in fs.readdirSync(stylesheetsPath))
+    watchPath(stylesheet) for stylesheet in stylesheetPaths
+
     @entities
 
-  loadStylesheet: ->
+  loadStylesheet: (pathName) ->
+    @trigger('globals-changed') if pathName.indexOf('ui-variables') > -1
     @loadAllStylesheets()
 
   loadAllStylesheets: =>

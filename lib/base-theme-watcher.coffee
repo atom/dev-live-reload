@@ -1,13 +1,12 @@
-fs = require 'fs'
+{fs} = require 'atom'
 path = require 'path'
-
 Watcher = require './watcher'
 
 module.exports =
 class BaseThemeWatcher extends Watcher
   constructor: ->
     super()
-    @stylesheetsPath = path.dirname(window.resolveStylesheet('atom.less'))
+    @stylesheetsPath = path.dirname(window.resolveStylesheet('../static/atom.less'))
     @watch()
 
   watch: ->
