@@ -22,5 +22,4 @@ class UIWatcher
 
   reloadAll: =>
     @baseTheme.reloadStylesheet()
-    theme.load() for theme in atom.themes.getActiveThemes()
     pack.reloadStylesheets() for pack in atom.getActivePackages() when PackageWatcher.supportsPackage(pack)

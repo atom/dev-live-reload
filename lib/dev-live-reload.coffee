@@ -13,4 +13,5 @@ module.exports =
     $(window).on 'focus', createUIWatcher
 
     rootView.command 'dev-live-reload:reload-all', ->
+      console.log 'Reloading all styles!'
       uiWatcher.reloadAll()
