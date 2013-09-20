@@ -1,4 +1,4 @@
-$ = require 'jquery'
+{$} = require 'atom'
 UIWatcher = require './ui-watcher'
 
 module.exports =

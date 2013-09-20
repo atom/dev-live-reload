@@ -1,12 +1,11 @@
-fsUtils = require 'fs-utils'
-AtomPackage = require 'atom-package'
+{fs} = require 'atom'
 
 Watcher = require './watcher'
 
 module.exports =
 class PackageWatcher extends Watcher
   @supportsPackage: (pack) ->
-    pack instanceof AtomPackage and fsUtils.isDirectorySync(pack.getStylesheetsPath())
+    pack.getType() == 'atom' and fs.isDirectorySync(pack.getStylesheetsPath())
 
   constructor: (@pack) ->
     super()

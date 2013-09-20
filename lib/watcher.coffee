@@ -1,9 +1,5 @@
-_ = require 'underscore'
-fs = require 'fs'
+{_, fs, File, Directory, EventEmitter} = require 'atom'
 path = require 'path'
-File = require 'file'
-Directory = require 'directory'
-EventEmitter = require 'event-emitter'
 
 module.exports =
 class Watcher

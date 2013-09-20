@@ -1,6 +1,5 @@
-_ = require 'underscore'
+{_} = require 'atom'
 path = require 'path'
-ThemeManager = require 'theme-manager'
 
 UIWatcher = require '../lib/ui-watcher.coffee'
 PackageWatcher = require '../lib/package-watcher.coffee'
@@ -11,21 +10,19 @@ describe "UIWatcher", ->
 
   describe "when a base theme's file changes", ->
     beforeEach ->
-      themeManager = new ThemeManager()
-      uiWatcher = new UIWatcher({ themeManager })
+      uiWatcher = new UIWatcher()
 
     it "reloads all the base styles", ->
       spyOn(atom, 'reloadBaseStylesheets')
 
-      uiWatcher.baseTheme.entities[1].trigger('contents-changed')
+      uiWatcher.baseTheme.entities[0].trigger('contents-changed')
 
       expect(atom.reloadBaseStylesheets).toHaveBeenCalled()
 
   describe "when a package stylesheet file changes", ->
     beforeEach ->
       atom.activatePackage("package-with-stylesheets-manifest")
-      themeManager = new ThemeManager()
-      uiWatcher = new UIWatcher({ themeManager })
+      uiWatcher = new UIWatcher()
 
     it "reloads all package styles", ->
       pack = atom.getActivePackages()[0]
@@ -38,8 +35,7 @@ describe "UIWatcher", ->
   describe "when a package does not have a stylesheet", ->
     beforeEach ->
       atom.activatePackage("package-with-index")
-      themeManager = new ThemeManager()
-      uiWatcher = new UIWatcher({ themeManager })
+      uiWatcher = new UIWatcher()
 
     it "does not create a PackageWatcher", ->
       expect(_.last(uiWatcher.watchers)).not.toBeInstanceOf PackageWatcher

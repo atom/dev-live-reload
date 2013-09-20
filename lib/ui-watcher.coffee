@@ -1,21 +1,12 @@
 BaseThemeWatcher = require './base-theme-watcher'
-ThemeWatcher = require './theme-watcher'
 PackageWatcher = require './package-watcher'
 
 module.exports =
 class UIWatcher
-  constructor: ({@themeManager}) ->
+  constructor: () ->
     @watchers = []
     @baseTheme = @createWatcher(BaseThemeWatcher)
-    @watchThemes()
     @watchPackages()
-
-  watchThemes: ->
-    for theme in @themeManager.getActiveThemes()
-      @createWatcher(ThemeWatcher, theme)
-
-    @themeManager.on 'theme-activated', (theme) =>
-      @createWatcher(ThemeWatcher, theme)
 
   watchPackages: ->
     for pack in atom.getActivePackages()
