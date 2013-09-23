@@ -35,4 +35,5 @@ class PackageWatcher extends Watcher
     @loadAllStylesheets()
 
   loadAllStylesheets: =>
+    console.log 'Reloading package', @pack.name
     @pack.reloadStylesheets()
