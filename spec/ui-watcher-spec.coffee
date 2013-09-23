@@ -12,17 +12,24 @@ describe "UIWatcher", ->
     beforeEach ->
       uiWatcher = new UIWatcher()
 
+    afterEach ->
+      uiWatcher.destroy()
+
     it "reloads all the base styles", ->
       spyOn(atom, 'reloadBaseStylesheets')
 
-      uiWatcher.baseTheme.entities[0].trigger('contents-changed')
+      expect(uiWatcher.baseTheme.entities[1].getPath()).toContain '/static/'
 
+      uiWatcher.baseTheme.entities[0].trigger('contents-changed')
       expect(atom.reloadBaseStylesheets).toHaveBeenCalled()
 
   describe "when a package stylesheet file changes", ->
     beforeEach ->
       atom.activatePackage("package-with-stylesheets-manifest")
       uiWatcher = new UIWatcher()
+
+    afterEach ->
+      uiWatcher.destroy()
 
     it "reloads all package styles", ->
       pack = atom.getActivePackages()[0]
@@ -37,6 +44,9 @@ describe "UIWatcher", ->
       atom.activatePackage("package-with-index")
       uiWatcher = new UIWatcher()
 
+    afterEach ->
+      uiWatcher.destroy()
+
     it "does not create a PackageWatcher", ->
       expect(_.last(uiWatcher.watchers)).not.toBeInstanceOf PackageWatcher
 
@@ -46,6 +56,9 @@ describe "UIWatcher", ->
       atom.activatePackage("theme-with-multiple-imported-files")
       pack = atom.getActivePackages()[0]
       uiWatcher = new UIWatcher()
+
+    afterEach ->
+      uiWatcher.destroy()
 
     it "reloads the theme when anything within the theme changes", ->
       spyOn(pack, 'reloadStylesheets')

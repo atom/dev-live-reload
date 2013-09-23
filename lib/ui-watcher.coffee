@@ -9,11 +9,15 @@ class UIWatcher
     @watchPackages()
 
   watchPackages: ->
+    @watchedPackages = {}
     for pack in atom.themes.getActiveThemes()
-      @createWatcher(PackageWatcher, pack) if PackageWatcher.supportsPackage(pack)
+      @watchedPackages[pack.name] = @createWatcher(PackageWatcher, pack) if PackageWatcher.supportsPackage(pack)
 
     for pack in atom.getActivePackages()
-      @createWatcher(PackageWatcher, pack) if PackageWatcher.supportsPackage(pack)
+      @watchedPackages[pack.name] = @createWatcher(PackageWatcher, pack) if PackageWatcher.supportsPackage(pack)
+
+  watchForPackageChanges: ->
+    #config.observe 'core.themes', (themeNames) =>
 
   createWatcher: (type, object) ->
     watcher = new type(object)
@@ -26,3 +30,8 @@ class UIWatcher
   reloadAll: =>
     @baseTheme.loadAllStylesheets()
     pack.reloadStylesheets() for pack in atom.getActivePackages() when PackageWatcher.supportsPackage(pack)
+
+  destroy: ->
+    @baseTheme.destroy()
+    for name, watcher of @watchedPackages
+      watcher.destroy()
