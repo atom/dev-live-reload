@@ -13,7 +13,7 @@ class BaseThemeWatcher extends Watcher
     filePaths = fs.readdirSync(@stylesheetsPath).filter (filePath) ->
       path.extname(filePath).indexOf('less') > -1
 
-    @watchFile(filePath) for filePath in filePaths
+    @watchFile(path.join(@stylesheetsPath, filePath)) for filePath in filePaths
 
   loadStylesheet: ->
     @loadAllStylesheets()
