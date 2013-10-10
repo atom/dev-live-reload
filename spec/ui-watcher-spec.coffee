@@ -16,12 +16,12 @@ describe "UIWatcher", ->
       uiWatcher.destroy()
 
     it "reloads all the base styles", ->
-      spyOn(atom, 'reloadBaseStylesheets')
+      spyOn(atom.themes, 'reloadBaseStylesheets')
 
       expect(uiWatcher.baseTheme.entities[1].getPath()).toContain '/static/'
 
       uiWatcher.baseTheme.entities[0].trigger('contents-changed')
-      expect(atom.reloadBaseStylesheets).toHaveBeenCalled()
+      expect(atom.themes.reloadBaseStylesheets).toHaveBeenCalled()
 
   describe "when a package stylesheet file changes", ->
     beforeEach ->
@@ -63,7 +63,7 @@ describe "UIWatcher", ->
 
     it "reloads the theme when anything within the theme changes", ->
       spyOn(pack, 'reloadStylesheets')
-      spyOn(atom, 'reloadBaseStylesheets')
+      spyOn(atom.themes, 'reloadBaseStylesheets')
 
       watcher = _.last(uiWatcher.watchers)
 
@@ -71,10 +71,10 @@ describe "UIWatcher", ->
 
       watcher.entities[2].trigger('contents-changed')
       expect(pack.reloadStylesheets).toHaveBeenCalled()
-      expect(atom.reloadBaseStylesheets).not.toHaveBeenCalled()
+      expect(atom.themes.reloadBaseStylesheets).not.toHaveBeenCalled()
 
       _.last(watcher.entities).trigger('contents-changed')
-      expect(atom.reloadBaseStylesheets).toHaveBeenCalled()
+      expect(atom.themes.reloadBaseStylesheets).toHaveBeenCalled()
 
     it "unwatches when a theme is deactivated", ->
       config.set('core.themes', [])

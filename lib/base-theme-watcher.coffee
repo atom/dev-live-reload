@@ -6,7 +6,7 @@ module.exports =
 class BaseThemeWatcher extends Watcher
   constructor: ->
     super()
-    @stylesheetsPath = path.dirname(window.resolveStylesheet('../static/atom.less'))
+    @stylesheetsPath = path.dirname(atom.themes.resolveStylesheet('../static/atom.less'))
     @watch()
 
   watch: ->
@@ -19,4 +19,4 @@ class BaseThemeWatcher extends Watcher
     @loadAllStylesheets()
 
   loadAllStylesheets: ->
-    atom.reloadBaseStylesheets()
+    atom.themes.reloadBaseStylesheets()
