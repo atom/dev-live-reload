@@ -20,7 +20,7 @@ describe "UIWatcher", ->
 
       expect(uiWatcher.baseTheme.entities[1].getPath()).toContain '/static/'
 
-      uiWatcher.baseTheme.entities[0].trigger('contents-changed')
+      uiWatcher.baseTheme.entities[0].emit('contents-changed')
       expect(atom.themes.reloadBaseStylesheets).toHaveBeenCalled()
 
   describe "when a package stylesheet file changes", ->
@@ -35,7 +35,7 @@ describe "UIWatcher", ->
       pack = atom.getActivePackages()[0]
       spyOn(pack, 'reloadStylesheets')
 
-      _.last(uiWatcher.watchers).entities[1].trigger('contents-changed')
+      _.last(uiWatcher.watchers).entities[1].emit('contents-changed')
 
       expect(pack.reloadStylesheets).toHaveBeenCalled()
 
@@ -69,11 +69,11 @@ describe "UIWatcher", ->
 
       expect(watcher.entities.length).toBe 6
 
-      watcher.entities[2].trigger('contents-changed')
+      watcher.entities[2].emit('contents-changed')
       expect(pack.reloadStylesheets).toHaveBeenCalled()
       expect(atom.themes.reloadBaseStylesheets).not.toHaveBeenCalled()
 
-      _.last(watcher.entities).trigger('contents-changed')
+      _.last(watcher.entities).emit('contents-changed')
       expect(atom.themes.reloadBaseStylesheets).toHaveBeenCalled()
 
     it "unwatches when a theme is deactivated", ->
@@ -90,5 +90,5 @@ describe "UIWatcher", ->
       expect(pack.name).toBe "theme-with-package-file"
 
       watcher = uiWatcher.watchedThemes["theme-with-package-file"]
-      watcher.entities[2].trigger('contents-changed')
+      watcher.entities[2].emit('contents-changed')
       expect(pack.reloadStylesheets).toHaveBeenCalled()

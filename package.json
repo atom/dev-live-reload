@@ -7,7 +7,9 @@
     "type": "git",
     "url": "https://github.com/atom/dev-live-reload.git"
   },
-  "dependencies": {},
+  "dependencies": {
+    "emissary": "~0.6.0"
+  },
   "bugs": {
     "url": "https://github.com/atom/dev-live-reload/issues"
   },
