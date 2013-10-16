@@ -3,6 +3,8 @@ UIWatcher = require './ui-watcher'
 
 module.exports =
   activate: (state) ->
+    return unless atom.inDevMode()
+
     uiWatcher = null
 
     # HACK: I need an actvation event when the ui or packages are all loaded.
