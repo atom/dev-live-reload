@@ -3,6 +3,10 @@ UIWatcher = require './ui-watcher'
 
 module.exports =
   activate: (state) ->
+    return unless atom.getLoadSettings().devMode
+
+    console.log 'Enabling live reloader...'
+
     uiWatcher = null
 
     # HACK: I need an actvation event when the ui or packages are all loaded.
