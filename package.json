@@ -1,7 +1,7 @@
 {
   "name": "dev-live-reload",
   "main": "./lib/dev-live-reload",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "Live reload atom themes and packages.",
   "repository": {
     "type": "git",
