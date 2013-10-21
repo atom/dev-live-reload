@@ -3,7 +3,7 @@ UIWatcher = require './ui-watcher'
 
 module.exports =
   activate: (state) ->
-    return unless atom.inDevMode()
+    return unless atom.inDevMode() and not atom.inSpecMode()
 
     uiWatcher = null
 
