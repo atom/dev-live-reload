@@ -25,14 +25,14 @@ describe "UIWatcher", ->
 
   describe "when a package stylesheet file changes", ->
     beforeEach ->
-      atom.activatePackage("package-with-stylesheets-manifest")
+      atom.packages.activatePackage("package-with-stylesheets-manifest")
       uiWatcher = new UIWatcher()
 
     afterEach ->
       uiWatcher.destroy()
 
     it "reloads all package styles", ->
-      pack = atom.getActivePackages()[0]
+      pack = atom.packages.getActivePackages()[0]
       spyOn(pack, 'reloadStylesheets')
 
       _.last(uiWatcher.watchers).entities[1].emit('contents-changed')
@@ -41,7 +41,7 @@ describe "UIWatcher", ->
 
   describe "when a package does not have a stylesheet", ->
     beforeEach ->
-      atom.activatePackage("package-with-index")
+      atom.packages.activatePackage("package-with-index")
       uiWatcher = new UIWatcher()
 
     afterEach ->
@@ -54,7 +54,7 @@ describe "UIWatcher", ->
     pack = null
     beforeEach ->
       config.set('core.themes', ["theme-with-multiple-imported-files"])
-      atom.themes.load()
+      atom.themes.activateThemes()
       pack = atom.themes.getActiveThemes()[0]
       uiWatcher = new UIWatcher()
 

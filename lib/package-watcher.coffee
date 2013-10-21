@@ -5,8 +5,8 @@ Watcher = require './watcher'
 
 module.exports =
 class PackageWatcher extends Watcher
-  @supportsPackage: (pack) ->
-    pack.getType() == 'atom' and fs.isDirectorySync(pack.getStylesheetsPath())
+  @supportsPackage: (pack, type) ->
+    pack.getType() == type and fs.isDirectorySync(pack.getStylesheetsPath())
 
   constructor: (@pack) ->
     super()
