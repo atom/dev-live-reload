@@ -1,4 +1,4 @@
-Dev Live Reload
+# Dev Live Reload
 
 This live reloads the atom LESS files. You edit styles and they are magically
 reflected in any running atom windows. Magic! Installed by default on Atom
@@ -6,7 +6,7 @@ windows running in dev mode (cmd+shift+o opens a dev mode window).
 
 ![gif]
 
-### Other
+### Notes
 
 * `meta-shift-ctrl-r` reloads all base + packages
 
