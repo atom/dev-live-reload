@@ -5,11 +5,12 @@ module.exports =
     return unless atom.inDevMode() and not atom.inSpecMode()
 
     uiWatcher = null
-
     atom.packages.once 'activated', ->
-      uiWatcher = new UIWatcher
-        themeManager: atom.themes
+      uiWatcher = new UIWatcher(themeManager: atom.themes)
+      themes = (k for k, __ of uiWatcher.watchedThemes)
+      packages = (k for k, __ of uiWatcher.watchedPackages)
+      console.info 'dev-live-reload: Watching', themes, packages
 
     rootView.command 'dev-live-reload:reload-all', ->
-      console.log 'Reloading all styles!'
+      console.info 'dev-live-reload: Reloading all styles!'
       uiWatcher.reloadAll()
