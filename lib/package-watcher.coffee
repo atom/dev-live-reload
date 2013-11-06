@@ -6,7 +6,8 @@ Watcher = require './watcher'
 module.exports =
 class PackageWatcher extends Watcher
   @supportsPackage: (pack, type) ->
-    pack.getType() == type and fs.isDirectorySync(pack.getStylesheetsPath())
+    return true if pack.getType() == type and pack.getStylesheetPaths().length
+    false
 
   constructor: (@pack) ->
     super()
@@ -21,12 +22,13 @@ class PackageWatcher extends Watcher
 
     stylesheetsPath = @pack.getStylesheetsPath()
 
-    @watchDirectory(stylesheetsPath)
+    @watchDirectory(stylesheetsPath) if fs.isDirectorySync(stylesheetsPath)
 
-    watchPath(stylesheet) for stylesheet in @pack.getStylesheetPaths()
+    stylesheetPaths = @pack.getStylesheetPaths()
+    if fs.existsSync(stylesheetsPath)
+      stylesheetPaths = stylesheetPaths.concat(path.join(stylesheetsPath, p) for p in fs.readdirSync(stylesheetsPath))
 
-    stylesheetPaths = (path.join(stylesheetsPath, p) for p in fs.readdirSync(stylesheetsPath))
-    watchPath(stylesheet) for stylesheet in stylesheetPaths
+    watchPath(stylesheet) for stylesheet in _.uniq(stylesheetPaths)
 
     @entities
 

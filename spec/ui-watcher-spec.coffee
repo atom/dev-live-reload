@@ -50,6 +50,29 @@ describe "UIWatcher", ->
     it "does not create a PackageWatcher", ->
       expect(_.last(uiWatcher.watchers)).not.toBeInstanceOf PackageWatcher
 
+  describe "minimal theme packages", ->
+    pack = null
+    beforeEach ->
+      config.set('core.themes', ["theme-with-index-less"])
+      atom.themes.activateThemes()
+      pack = atom.themes.getActiveThemes()[0]
+      uiWatcher = new UIWatcher()
+
+    afterEach ->
+      uiWatcher.destroy()
+
+    it "watches themes without stylesheets directory", ->
+      spyOn(pack, 'reloadStylesheets')
+      spyOn(atom.themes, 'reloadBaseStylesheets')
+
+      watcher = _.last(uiWatcher.watchers)
+
+      expect(watcher.entities.length).toBe 1
+
+      watcher.entities[0].emit('contents-changed')
+      expect(pack.reloadStylesheets).toHaveBeenCalled()
+      expect(atom.themes.reloadBaseStylesheets).not.toHaveBeenCalled()
+
   describe "theme packages", ->
     pack = null
     beforeEach ->
