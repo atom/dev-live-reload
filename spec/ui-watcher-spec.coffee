@@ -18,7 +18,7 @@ describe "UIWatcher", ->
     it "reloads all the base styles", ->
       spyOn(atom.themes, 'reloadBaseStylesheets')
 
-      expect(uiWatcher.baseTheme.entities[1].getPath()).toContain '/static/'
+      expect(uiWatcher.baseTheme.entities[1].getPath()).toContain "#{path.sep}static#{path.sep}"
 
       uiWatcher.baseTheme.entities[0].emit('contents-changed')
       expect(atom.themes.reloadBaseStylesheets).toHaveBeenCalled()
