@@ -11,6 +11,6 @@ module.exports =
       packages = (k for k, __ of uiWatcher.watchedPackages)
       console.info 'dev-live-reload: Watching', themes, packages
 
-    atom.rootView.command 'dev-live-reload:reload-all', ->
+    atom.workspaceView.command 'dev-live-reload:reload-all', ->
       console.info 'dev-live-reload: Reloading all styles!'
       uiWatcher.reloadAll()
