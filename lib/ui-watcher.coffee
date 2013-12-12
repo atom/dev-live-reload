@@ -40,7 +40,9 @@ class UIWatcher
 
   createWatcher: (type, object) ->
     watcher = new type(object)
-    watcher.on 'globals-changed', @reloadAll
+    watcher.on 'globals-changed', =>
+      console.log 'Global changed, reloading all styles'
+      @reloadAll()
     watcher.on 'destroyed', =>
       @watchers = _.without(@watchers, watcher)
     @watchers.push(watcher)
@@ -48,8 +50,8 @@ class UIWatcher
 
   reloadAll: =>
     @baseTheme.loadAllStylesheets()
-    pack.reloadStylesheets() for pack in atom.packages.getActivePackages() when PackageWatcher.supportsPackage(pack)
-    pack.reloadStylesheets() for pack in atom.themes.getActiveThemes() when PackageWatcher.supportsPackage(pack)
+    pack.reloadStylesheets() for pack in atom.packages.getActivePackages() when PackageWatcher.supportsPackage(pack, 'atom')
+    pack.reloadStylesheets() for pack in atom.themes.getActiveThemes() when PackageWatcher.supportsPackage(pack, 'theme')
 
   destroy: ->
     @baseTheme.destroy()

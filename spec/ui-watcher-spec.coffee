@@ -50,6 +50,26 @@ describe "UIWatcher", ->
     it "does not create a PackageWatcher", ->
       expect(_.last(uiWatcher.watchers)).not.toBeInstanceOf PackageWatcher
 
+  describe "when a package global file changes", ->
+    beforeEach ->
+      atom.config.set('core.themes', ["theme-with-ui-variables", "theme-with-multiple-imported-files"])
+      atom.themes.activateThemes()
+      uiWatcher = new UIWatcher()
+
+    afterEach ->
+      uiWatcher.destroy()
+
+    it "reloads every package when the variables file changes", ->
+      for pack in atom.themes.getActiveThemes()
+        spyOn(pack, 'reloadStylesheets')
+
+      for entity in _.last(uiWatcher.watchers).entities
+        varEntity = entity if entity.getPath().indexOf('variables') > -1
+      varEntity.emit('contents-changed')
+
+      for pack in atom.themes.getActiveThemes()
+        expect(pack.reloadStylesheets).toHaveBeenCalled()
+
   describe "minimal theme packages", ->
     pack = null
     beforeEach ->
