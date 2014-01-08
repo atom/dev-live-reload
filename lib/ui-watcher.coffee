@@ -28,7 +28,6 @@ class UIWatcher
       @watchTheme(theme) for theme in atom.themes.getActiveThemes()
 
       themes = (k for k, __ of @watchedThemes)
-      console.info 'dev-live-reload: re-watching themes', themes
 
       null
 
