@@ -25,8 +25,10 @@ describe "UIWatcher", ->
 
   describe "when a package stylesheet file changes", ->
     beforeEach ->
-      atom.packages.activatePackage("package-with-stylesheets-manifest")
-      uiWatcher = new UIWatcher()
+      waitsForPromise ->
+        atom.packages.activatePackage("package-with-stylesheets-manifest")
+      runs ->
+        uiWatcher = new UIWatcher()
 
     afterEach ->
       uiWatcher.destroy()
@@ -41,8 +43,10 @@ describe "UIWatcher", ->
 
   describe "when a package does not have a stylesheet", ->
     beforeEach ->
-      atom.packages.activatePackage("package-with-index")
-      uiWatcher = new UIWatcher()
+      waitsForPromise ->
+        atom.packages.activatePackage("package-with-index")
+      runs ->
+        uiWatcher = new UIWatcher()
 
     afterEach ->
       uiWatcher.destroy()
@@ -53,8 +57,10 @@ describe "UIWatcher", ->
   describe "when a package global file changes", ->
     beforeEach ->
       atom.config.set('core.themes', ["theme-with-ui-variables", "theme-with-multiple-imported-files"])
-      atom.themes.activateThemes()
-      uiWatcher = new UIWatcher()
+      waitsForPromise ->
+        atom.themes.activateThemes()
+      runs ->
+        uiWatcher = new UIWatcher()
 
     afterEach ->
       uiWatcher.destroy()
@@ -74,9 +80,11 @@ describe "UIWatcher", ->
     pack = null
     beforeEach ->
       atom.config.set('core.themes', ["theme-with-index-less"])
-      atom.themes.activateThemes()
-      pack = atom.themes.getActiveThemes()[0]
-      uiWatcher = new UIWatcher()
+      waitsForPromise ->
+        atom.themes.activateThemes()
+      runs ->
+        uiWatcher = new UIWatcher()
+        pack = atom.themes.getActiveThemes()[0]
 
     afterEach ->
       uiWatcher.destroy()
@@ -97,9 +105,12 @@ describe "UIWatcher", ->
     pack = null
     beforeEach ->
       atom.config.set('core.themes', ["theme-with-multiple-imported-files"])
-      atom.themes.activateThemes()
-      pack = atom.themes.getActiveThemes()[0]
-      uiWatcher = new UIWatcher()
+
+      waitsForPromise ->
+        atom.themes.activateThemes()
+      runs ->
+        uiWatcher = new UIWatcher()
+        pack = atom.themes.getActiveThemes()[0]
 
     afterEach ->
       uiWatcher.destroy()
@@ -121,17 +132,20 @@ describe "UIWatcher", ->
 
     it "unwatches when a theme is deactivated", ->
       atom.config.set('core.themes', [])
-      expect(uiWatcher.watchedThemes["theme-with-multiple-imported-files"]).not.toBeDefined()
+      waitsFor ->
+        not uiWatcher.watchedThemes["theme-with-multiple-imported-files"]
 
     it "watches a new theme when it is deactivated", ->
       atom.config.set('core.themes', ["theme-with-package-file"])
-      expect(uiWatcher.watchedThemes["theme-with-package-file"]).toBeDefined()
+      waitsFor ->
+        uiWatcher.watchedThemes["theme-with-package-file"]
 
-      pack = atom.themes.getActiveThemes()[0]
-      spyOn(pack, 'reloadStylesheets')
+      runs ->
+        pack = atom.themes.getActiveThemes()[0]
+        spyOn(pack, 'reloadStylesheets')
 
-      expect(pack.name).toBe "theme-with-package-file"
+        expect(pack.name).toBe "theme-with-package-file"
 
-      watcher = uiWatcher.watchedThemes["theme-with-package-file"]
-      watcher.entities[2].emit('contents-changed')
-      expect(pack.reloadStylesheets).toHaveBeenCalled()
+        watcher = uiWatcher.watchedThemes["theme-with-package-file"]
+        watcher.entities[2].emit('contents-changed')
+        expect(pack.reloadStylesheets).toHaveBeenCalled()
