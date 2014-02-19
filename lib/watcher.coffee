@@ -1,4 +1,5 @@
-{_, fs, File, Directory} = require 'atom'
+{_, fs} = require 'atom'
+{File, Directory} = require 'pathwatcher'
 {Emitter} = require 'emissary'
 path = require 'path'
 

@@ -5,7 +5,8 @@
   "description": "Live reload atom themes and packages.",
   "repository": "https://github.com/atom/dev-live-reload",
   "dependencies": {
-    "emissary": "1.x"
+    "emissary": "1.x",
+    "pathwatcher": "0.16.0"
   },
   "engines": {
     "atom": "*"
