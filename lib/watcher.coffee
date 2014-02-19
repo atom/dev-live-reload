@@ -1,4 +1,4 @@
-{_, fs, File, Directory, EventEmitter} = require 'atom'
+{_, fs, File, Directory} = require 'atom'
 {Emitter} = require 'emissary'
 path = require 'path'
 
