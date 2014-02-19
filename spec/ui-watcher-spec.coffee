@@ -1,4 +1,4 @@
-{_} = require 'atom'
+_ = require 'underscore-plus'
 path = require 'path'
 
 UIWatcher = require '../lib/ui-watcher.coffee'

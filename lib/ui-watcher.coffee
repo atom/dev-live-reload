@@ -1,4 +1,4 @@
-{_} = require 'atom'
+_ = require 'underscore-plus'
 BaseThemeWatcher = require './base-theme-watcher'
 PackageWatcher = require './package-watcher'
 
