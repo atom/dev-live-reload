@@ -1,4 +1,5 @@
-{_, fs} = require 'atom'
+{_} = require 'atom'
+fs = require 'fs-plus'
 path = require 'path'
 
 Watcher = require './watcher'
