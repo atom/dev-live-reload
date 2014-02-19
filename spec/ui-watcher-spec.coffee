@@ -64,6 +64,7 @@ describe "UIWatcher", ->
 
     afterEach ->
       uiWatcher.destroy()
+      atom.themes.deactivateThemes()
 
     it "reloads every package when the variables file changes", ->
       for pack in atom.themes.getActiveThemes()
@@ -88,6 +89,7 @@ describe "UIWatcher", ->
 
     afterEach ->
       uiWatcher.destroy()
+      atom.themes.deactivateThemes()
 
     it "watches themes without stylesheets directory", ->
       spyOn(pack, 'reloadStylesheets')
@@ -114,6 +116,7 @@ describe "UIWatcher", ->
 
     afterEach ->
       uiWatcher.destroy()
+      atom.themes.deactivateThemes()
 
     it "reloads the theme when anything within the theme changes", ->
       spyOn(pack, 'reloadStylesheets')
