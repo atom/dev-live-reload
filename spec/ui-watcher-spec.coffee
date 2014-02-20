@@ -52,7 +52,7 @@ describe "UIWatcher", ->
       uiWatcher.destroy()
 
     it "does not create a PackageWatcher", ->
-      expect(_.last(uiWatcher.watchers)).not.toBeInstanceOf PackageWatcher
+      expect(uiWatcher.watchedPackages['package-with-index']).toBeUndefined()
 
   describe "when a package global file changes", ->
     beforeEach ->
@@ -70,7 +70,7 @@ describe "UIWatcher", ->
       for pack in atom.themes.getActiveThemes()
         spyOn(pack, 'reloadStylesheets')
 
-      for entity in _.last(uiWatcher.watchers).entities
+      for entity in uiWatcher.watchedThemes['theme-with-multiple-imported-files'].entities
         varEntity = entity if entity.getPath().indexOf('variables') > -1
       varEntity.emit('contents-changed')
 
@@ -95,7 +95,7 @@ describe "UIWatcher", ->
       spyOn(pack, 'reloadStylesheets')
       spyOn(atom.themes, 'reloadBaseStylesheets')
 
-      watcher = _.last(uiWatcher.watchers)
+      watcher = uiWatcher.watchedThemes['theme-with-index-less']
 
       expect(watcher.entities.length).toBe 1
 
@@ -122,7 +122,7 @@ describe "UIWatcher", ->
       spyOn(pack, 'reloadStylesheets')
       spyOn(atom.themes, 'reloadBaseStylesheets')
 
-      watcher = _.last(uiWatcher.watchers)
+      watcher = uiWatcher.watchedThemes['theme-with-multiple-imported-files']
 
       expect(watcher.entities.length).toBe 6
 

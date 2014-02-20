@@ -4,7 +4,7 @@ PackageWatcher = require './package-watcher'
 
 module.exports =
 class UIWatcher
-  constructor: () ->
+  constructor: ->
     @watchers = []
     @baseTheme = @createWatcher(BaseThemeWatcher)
     @watchPackages()
@@ -13,7 +13,7 @@ class UIWatcher
     @watchedThemes = {}
     @watchedPackages = {}
     @watchTheme(theme) for theme in atom.themes.getActiveThemes()
-    @watchPackage(pack) for pack in atom.packages.getActivePackages()
+    @watchPackage(pack) for pack in atom.packages.getLoadedPackages()
     @watchForPackageChanges()
 
   watchForPackageChanges: ->
