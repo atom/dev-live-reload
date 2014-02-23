@@ -1,4 +1,4 @@
-# Dev Live Reload
+# Dev Live Reload package
 
 This live reloads the Atom `.less` files. You edit styles and they are magically
 reflected in any running Atom windows. Magic! :tophat: :sparkles: :rabbit2:
