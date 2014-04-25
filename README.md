@@ -1,4 +1,4 @@
-# Dev Live Reload package
+# Dev Live Reload package [![Build Status](https://travis-ci.org/atom/dev-live-reload.svg?branch=master)](https://travis-ci.org/atom/dev-live-reload)
 
 This live reloads the Atom `.less` files. You edit styles and they are magically
 reflected in any running Atom windows. Magic! :tophat: :sparkles: :rabbit2:
