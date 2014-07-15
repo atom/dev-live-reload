@@ -26,7 +26,8 @@ describe "UIWatcher", ->
   describe "when a package stylesheet file changes", ->
     beforeEach ->
       waitsForPromise ->
-        atom.packages.activatePackage("package-with-stylesheets-manifest")
+        atom.packages.activatePackage(path.join(__dirname, 'fixtures', 'package-with-stylesheets-manifest'))
+
       runs ->
         uiWatcher = new UIWatcher()
 
@@ -56,9 +57,12 @@ describe "UIWatcher", ->
 
   describe "when a package global file changes", ->
     beforeEach ->
+      atom.packages.packageDirPaths.push path.join(__dirname, 'fixtures')
       atom.config.set('core.themes', ["theme-with-ui-variables", "theme-with-multiple-imported-files"])
+
       waitsForPromise ->
         atom.themes.activateThemes()
+
       runs ->
         uiWatcher = new UIWatcher()
 
