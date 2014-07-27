@@ -27,7 +27,8 @@ class PackageWatcher extends Watcher
 
     stylesheetPaths = @pack.getStylesheetPaths()
     if fs.existsSync(stylesheetsPath)
-      stylesheetPaths = stylesheetPaths.concat(path.join(stylesheetsPath, p) for p in fs.readdirSync(stylesheetsPath))
+      stylesheetPaths = stylesheetPaths.concat(path.join(stylesheetsPath, p) \
+      for p in fs.listTreeSync(stylesheetsPath) when p.substr(-5) == '.less')
 
     watchPath(stylesheet) for stylesheet in _.uniq(stylesheetPaths)
 
