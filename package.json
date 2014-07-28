@@ -1,14 +1,14 @@
 {
   "name": "dev-live-reload",
   "main": "./lib/dev-live-reload",
-  "version": "0.32.0",
+  "version": "1.0.0",
   "description": "Live reload atom themes and packages.",
   "repository": "https://github.com/atom/dev-live-reload",
   "license": "MIT",
   "dependencies": {
     "emissary": "1.x",
     "fs-plus": "2.x",
-    "pathwatcher": "^1.0",
+    "pathwatcher": "^2.0",
     "underscore-plus": "1.x"
   },
   "engines": {
