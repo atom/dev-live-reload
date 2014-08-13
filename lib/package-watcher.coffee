@@ -26,8 +26,9 @@ class PackageWatcher extends Watcher
     @watchDirectory(stylesheetsPath) if fs.isDirectorySync(stylesheetsPath)
 
     stylesheetPaths = @pack.getStylesheetPaths()
-    if fs.existsSync(stylesheetsPath)
-      stylesheetPaths = stylesheetPaths.concat(path.join(stylesheetsPath, p) for p in fs.readdirSync(stylesheetsPath))
+    onFile = (stylesheetPath) -> stylesheetPaths.push(stylesheetPath)
+    onFolder = -> true
+    fs.traverseTreeSync(stylesheetsPath, onFile, onFolder)
 
     watchPath(stylesheet) for stylesheet in _.uniq(stylesheetPaths)
 

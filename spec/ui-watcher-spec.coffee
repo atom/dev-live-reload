@@ -8,12 +8,12 @@ describe "UIWatcher", ->
   themeManager = null
   uiWatcher = null
 
+  afterEach ->
+    uiWatcher?.destroy()
+
   describe "when a base theme's file changes", ->
     beforeEach ->
       uiWatcher = new UIWatcher()
-
-    afterEach ->
-      uiWatcher.destroy()
 
     it "reloads all the base styles", ->
       spyOn(atom.themes, 'reloadBaseStylesheets')
@@ -23,6 +23,20 @@ describe "UIWatcher", ->
       uiWatcher.baseTheme.entities[0].emit('contents-changed')
       expect(atom.themes.reloadBaseStylesheets).toHaveBeenCalled()
 
+  it "watches all the stylesheets in the theme's stylesheets folder", ->
+    packagePath = path.join(__dirname, 'fixtures', 'package-with-stylesheets-folder')
+
+    waitsForPromise ->
+      atom.packages.activatePackage(packagePath)
+
+    runs ->
+      uiWatcher = new UIWatcher()
+      expect(_.last(uiWatcher.watchers).entities.length).toBe 4
+      expect(_.last(uiWatcher.watchers).entities[0].getPath()).toBe path.join(packagePath, 'stylesheets')
+      expect(_.last(uiWatcher.watchers).entities[1].getPath()).toBe path.join(packagePath, 'stylesheets', '3.css')
+      expect(_.last(uiWatcher.watchers).entities[2].getPath()).toBe path.join(packagePath, 'stylesheets', 'sub', '1.css')
+      expect(_.last(uiWatcher.watchers).entities[3].getPath()).toBe path.join(packagePath, 'stylesheets', 'sub', '2.less')
+
   describe "when a package stylesheet file changes", ->
     beforeEach ->
       waitsForPromise ->
@@ -30,9 +44,6 @@ describe "UIWatcher", ->
 
       runs ->
         uiWatcher = new UIWatcher()
-
-    afterEach ->
-      uiWatcher.destroy()
 
     it "reloads all package styles", ->
       pack = atom.packages.getActivePackages()[0]
@@ -49,9 +60,6 @@ describe "UIWatcher", ->
       runs ->
         uiWatcher = new UIWatcher()
 
-    afterEach ->
-      uiWatcher.destroy()
-
     it "does not create a PackageWatcher", ->
       expect(uiWatcher.watchedPackages['package-with-index']).toBeUndefined()
 
@@ -67,7 +75,6 @@ describe "UIWatcher", ->
         uiWatcher = new UIWatcher()
 
     afterEach ->
-      uiWatcher.destroy()
       atom.themes.deactivateThemes()
 
     it "reloads every package when the variables file changes", ->
@@ -92,7 +99,6 @@ describe "UIWatcher", ->
         pack = atom.themes.getActiveThemes()[0]
 
     afterEach ->
-      uiWatcher.destroy()
       atom.themes.deactivateThemes()
 
     it "watches themes without stylesheets directory", ->
@@ -119,7 +125,6 @@ describe "UIWatcher", ->
         pack = atom.themes.getActiveThemes()[0]
 
     afterEach ->
-      uiWatcher.destroy()
       atom.themes.deactivateThemes()
 
     it "reloads the theme when anything within the theme changes", ->
