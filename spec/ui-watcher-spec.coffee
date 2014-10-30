@@ -91,7 +91,7 @@ describe "UIWatcher", ->
   describe "minimal theme packages", ->
     pack = null
     beforeEach ->
-      atom.config.set('core.themes', ["theme-with-index-less"])
+      atom.config.set('core.themes', ["theme-with-syntax-variables", "theme-with-index-less"])
       waitsForPromise ->
         atom.themes.activateThemes()
       runs ->
@@ -116,7 +116,7 @@ describe "UIWatcher", ->
   describe "theme packages", ->
     pack = null
     beforeEach ->
-      atom.config.set('core.themes', ["theme-with-multiple-imported-files"])
+      atom.config.set('core.themes', ["theme-with-syntax-variables", "theme-with-multiple-imported-files"])
 
       waitsForPromise ->
         atom.themes.activateThemes()
@@ -148,7 +148,7 @@ describe "UIWatcher", ->
         not uiWatcher.watchedThemes["theme-with-multiple-imported-files"]
 
     it "watches a new theme when it is deactivated", ->
-      atom.config.set('core.themes', ["theme-with-package-file"])
+      atom.config.set('core.themes', ["theme-with-syntax-variables", "theme-with-package-file"])
       waitsFor ->
         uiWatcher.watchedThemes["theme-with-package-file"]
 
