@@ -35,7 +35,7 @@ class PackageWatcher extends Watcher
     @entities
 
   loadStylesheet: (pathName) ->
-    @emit('globals-changed') if pathName.indexOf('variables') > -1
+    @emitGlobalsChanged() if pathName.indexOf('variables') > -1
     @loadAllStylesheets()
 
   loadAllStylesheets: =>

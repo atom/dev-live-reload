@@ -38,10 +38,10 @@ class UIWatcher
 
   createWatcher: (type, object) ->
     watcher = new type(object)
-    watcher.on 'globals-changed', =>
+    watcher.onDidChangeGlobals =>
       console.log 'Global changed, reloading all styles'
       @reloadAll()
-    watcher.on 'destroyed', =>
+    watcher.onDidDestroy =>
       @watchers = _.without(@watchers, watcher)
     @watchers.push(watcher)
     watcher
