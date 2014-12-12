@@ -17,7 +17,7 @@ class UIWatcher
     @watchForPackageChanges()
 
   watchForPackageChanges: ->
-    atom.themes.on 'reloaded', =>
+    atom.themes.onDidReloadAll =>
       # we need to destroy all watchers as all theme packages are destroyed when a
       # theme changes.
       watcher.destroy() for name, watcher of @watchedThemes
@@ -38,10 +38,10 @@ class UIWatcher
 
   createWatcher: (type, object) ->
     watcher = new type(object)
-    watcher.on 'globals-changed', =>
+    watcher.onDidChangeGlobals =>
       console.log 'Global changed, reloading all styles'
       @reloadAll()
-    watcher.on 'destroyed', =>
+    watcher.onDidDestroy =>
       @watchers = _.without(@watchers, watcher)
     @watchers.push(watcher)
     watcher
