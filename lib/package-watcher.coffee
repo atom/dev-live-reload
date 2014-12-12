@@ -12,7 +12,7 @@ class PackageWatcher extends Watcher
 
   constructor: (@pack) ->
     super()
-    @pack.on 'deactivated', @destroy
+    @pack.onDidDeactivate(@destroy)
     @watch()
 
   watch: ->
