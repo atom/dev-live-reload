@@ -1,6 +1,7 @@
 UIWatcher = require './ui-watcher'
 
 module.exports =
+  commandDisposable: null
   activate: (state) ->
     return unless atom.inDevMode() and not atom.inSpecMode()
 
@@ -11,5 +12,8 @@ module.exports =
       packages = (k for k, __ of uiWatcher.watchedPackages)
       activatedDisposable.dispose()
 
-    atom.workspaceView.command 'dev-live-reload:reload-all', ->
+    @commandDisposable = atom.commands.add 'atom-workspace', 'dev-live-reload:reload-all', ->
       uiWatcher.reloadAll()
+
+  deactivate: ->
+    @commandDisposable?.dispose()
