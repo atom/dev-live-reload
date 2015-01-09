@@ -6,7 +6,7 @@ module.exports =
     return unless atom.inDevMode() and not atom.inSpecMode()
 
     uiWatcher = null
-    activatedDisposable = atom.packages.onDidActivateAll ->
+    activatedDisposable = atom.packages.onDidActivateInitialPackages ->
       uiWatcher = new UIWatcher(themeManager: atom.themes)
       themes = (k for k, __ of uiWatcher.watchedThemes)
       packages = (k for k, __ of uiWatcher.watchedPackages)

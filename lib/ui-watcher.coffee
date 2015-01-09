@@ -17,7 +17,7 @@ class UIWatcher
     @watchForPackageChanges()
 
   watchForPackageChanges: ->
-    atom.themes.onDidReloadAll =>
+    atom.themes.onDidChangeActiveThemes =>
       # we need to destroy all watchers as all theme packages are destroyed when a
       # theme changes.
       watcher.destroy() for name, watcher of @watchedThemes
