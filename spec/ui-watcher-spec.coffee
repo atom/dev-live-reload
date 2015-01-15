@@ -23,8 +23,8 @@ describe "UIWatcher", ->
       uiWatcher.baseTheme.entities[0].emit('contents-changed')
       expect(atom.themes.reloadBaseStylesheets).toHaveBeenCalled()
 
-  it "watches all the stylesheets in the theme's stylesheets folder", ->
-    packagePath = path.join(__dirname, 'fixtures', 'package-with-stylesheets-folder')
+  it "watches all the style sheets in the theme's styles folder", ->
+    packagePath = path.join(__dirname, 'fixtures', 'package-with-styles-folder')
 
     waitsForPromise ->
       atom.packages.activatePackage(packagePath)
@@ -32,15 +32,15 @@ describe "UIWatcher", ->
     runs ->
       uiWatcher = new UIWatcher()
       expect(_.last(uiWatcher.watchers).entities.length).toBe 4
-      expect(_.last(uiWatcher.watchers).entities[0].getPath()).toBe path.join(packagePath, 'stylesheets')
-      expect(_.last(uiWatcher.watchers).entities[1].getPath()).toBe path.join(packagePath, 'stylesheets', '3.css')
-      expect(_.last(uiWatcher.watchers).entities[2].getPath()).toBe path.join(packagePath, 'stylesheets', 'sub', '1.css')
-      expect(_.last(uiWatcher.watchers).entities[3].getPath()).toBe path.join(packagePath, 'stylesheets', 'sub', '2.less')
+      expect(_.last(uiWatcher.watchers).entities[0].getPath()).toBe path.join(packagePath, 'styles')
+      expect(_.last(uiWatcher.watchers).entities[1].getPath()).toBe path.join(packagePath, 'styles', '3.css')
+      expect(_.last(uiWatcher.watchers).entities[2].getPath()).toBe path.join(packagePath, 'styles', 'sub', '1.css')
+      expect(_.last(uiWatcher.watchers).entities[3].getPath()).toBe path.join(packagePath, 'styles', 'sub', '2.less')
 
   describe "when a package stylesheet file changes", ->
     beforeEach ->
       waitsForPromise ->
-        atom.packages.activatePackage(path.join(__dirname, 'fixtures', 'package-with-stylesheets-manifest'))
+        atom.packages.activatePackage(path.join(__dirname, 'fixtures', 'package-with-styles-manifest'))
 
       runs ->
         uiWatcher = new UIWatcher()
@@ -101,7 +101,7 @@ describe "UIWatcher", ->
     afterEach ->
       atom.themes.deactivateThemes()
 
-    it "watches themes without stylesheets directory", ->
+    it "watches themes without a styles directory", ->
       spyOn(pack, 'reloadStylesheets')
       spyOn(atom.themes, 'reloadBaseStylesheets')
 
