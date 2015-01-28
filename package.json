@@ -7,7 +7,7 @@
   "license": "MIT",
   "dependencies": {
     "fs-plus": "2.x",
-    "pathwatcher": "^2.7.0",
+    "pathwatcher": "^3.0.0",
     "underscore-plus": "1.x"
   },
   "engines": {
