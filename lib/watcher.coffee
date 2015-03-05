@@ -1,11 +1,12 @@
 {File, Directory} = require 'pathwatcher'
-{Emitter} = require 'atom'
+{CompositeDisposable, Emitter} = require 'atom'
 path = require 'path'
 
 module.exports =
 class Watcher
   constructor: ->
     @emitter = new Emitter
+    @disposables = new CompositeDisposable
     @entities = []
 
   onDidDestroy: (callback) ->
@@ -15,18 +16,13 @@ class Watcher
     @emitter.on 'did-change-globals', callback
 
   destroy: =>
-    @unwatch()
+    @disposables.dispose()
     @entities = null
     @emitter.emit('did-destroy')
     @emitter.dispose()
 
   watch: ->
     # override me
-
-  unwatch: ->
-    return unless @entities
-    for entity in @entities
-      entity.off '.dev-live-reload'
 
   loadStylesheet: (stylesheetPath) ->
     # override me
@@ -39,12 +35,12 @@ class Watcher
 
   watchDirectory: (directoryPath) ->
     entity = new Directory(directoryPath)
-    entity.on 'contents-changed.dev-live-reload', => @loadAllStylesheets()
+    @disposables.add entity.onDidChange => @loadAllStylesheets()
     @entities.push(entity)
 
   watchGlobalFile: (filePath) ->
     entity = new File(filePath)
-    entity.on 'contents-changed.dev-live-reload', => @emitGlobalsChanged()
+    @disposables.add entity.onDidChange => @emitGlobalsChanged()
     @entities.push(entity)
 
   watchFile: (filePath) ->
@@ -52,7 +48,7 @@ class Watcher
       @loadStylesheet(entity.getPath())
 
     entity = new File(filePath)
-    entity.on 'contents-changed.dev-live-reload', reloadFn
-    entity.on 'removed.dev-live-reload', reloadFn
-    entity.on 'moved.dev-live-reload', reloadFn
+    @disposables.add entity.onDidChange(reloadFn)
+    @disposables.add entity.onDidDelete(reloadFn)
+    @disposables.add entity.onDidRename(reloadFn)
     @entities.push(entity)
