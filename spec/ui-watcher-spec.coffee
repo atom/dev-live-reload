@@ -8,6 +8,9 @@ describe "UIWatcher", ->
   themeManager = null
   uiWatcher = null
 
+  beforeEach ->
+    atom.packages.packageDirPaths.push path.join(__dirname, 'fixtures')
+
   afterEach ->
     uiWatcher?.destroy()
 
@@ -66,7 +69,6 @@ describe "UIWatcher", ->
 
   describe "when a package global file changes", ->
     beforeEach ->
-      atom.packages.packageDirPaths.push path.join(__dirname, 'fixtures')
       atom.config.set('core.themes', ["theme-with-ui-variables", "theme-with-multiple-imported-files"])
 
       waitsForPromise ->
