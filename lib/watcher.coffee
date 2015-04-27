@@ -34,6 +34,7 @@ class Watcher
     @emitter.emit('did-change-globals')
 
   watchDirectory: (directoryPath) ->
+    return if @isInAsarArchive(directoryPath)
     entity = new Directory(directoryPath)
     @disposables.add entity.onDidChange => @loadAllStylesheets()
     @entities.push(entity)
@@ -44,6 +45,7 @@ class Watcher
     @entities.push(entity)
 
   watchFile: (filePath) ->
+    return if @isInAsarArchive(filePath)
     reloadFn = =>
       @loadStylesheet(entity.getPath())
 
@@ -52,3 +54,7 @@ class Watcher
     @disposables.add entity.onDidDelete(reloadFn)
     @disposables.add entity.onDidRename(reloadFn)
     @entities.push(entity)
+
+  isInAsarArchive: (pathToCheck) ->
+    {resourcePath} = atom.getLoadSettings()
+    pathToCheck.startsWith("#{resourcePath}#{path.sep}") and path.extname(resourcePath) is '.asar'

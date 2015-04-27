@@ -57,6 +57,7 @@ describe "UIWatcher", ->
     beforeEach ->
       waitsForPromise ->
         atom.packages.activatePackage("package-with-index")
+
       runs ->
         uiWatcher = new UIWatcher()
 
