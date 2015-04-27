@@ -16,12 +16,13 @@ describe "UIWatcher", ->
 
   describe "when a base theme's file changes", ->
     beforeEach ->
+      spyOn(atom.themes, 'resolveStylesheet').andReturn path.join(__dirname, 'fixtures', 'static', 'atom.less')
       uiWatcher = new UIWatcher()
 
     it "reloads all the base styles", ->
       spyOn(atom.themes, 'reloadBaseStylesheets')
 
-      expect(uiWatcher.baseTheme.entities[1].getPath()).toContain "#{path.sep}static#{path.sep}"
+      expect(uiWatcher.baseTheme.entities[0].getPath()).toContain "#{path.sep}static#{path.sep}"
 
       uiWatcher.baseTheme.entities[0].emitter.emit('did-change')
       expect(atom.themes.reloadBaseStylesheets).toHaveBeenCalled()
