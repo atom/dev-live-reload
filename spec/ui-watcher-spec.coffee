@@ -8,17 +8,21 @@ describe "UIWatcher", ->
   themeManager = null
   uiWatcher = null
 
+  beforeEach ->
+    atom.packages.packageDirPaths.push path.join(__dirname, 'fixtures')
+
   afterEach ->
     uiWatcher?.destroy()
 
   describe "when a base theme's file changes", ->
     beforeEach ->
+      spyOn(atom.themes, 'resolveStylesheet').andReturn path.join(__dirname, 'fixtures', 'static', 'atom.less')
       uiWatcher = new UIWatcher()
 
     it "reloads all the base styles", ->
       spyOn(atom.themes, 'reloadBaseStylesheets')
 
-      expect(uiWatcher.baseTheme.entities[1].getPath()).toContain "#{path.sep}static#{path.sep}"
+      expect(uiWatcher.baseTheme.entities[0].getPath()).toContain "#{path.sep}static#{path.sep}"
 
       uiWatcher.baseTheme.entities[0].emitter.emit('did-change')
       expect(atom.themes.reloadBaseStylesheets).toHaveBeenCalled()
@@ -57,6 +61,7 @@ describe "UIWatcher", ->
     beforeEach ->
       waitsForPromise ->
         atom.packages.activatePackage("package-with-index")
+
       runs ->
         uiWatcher = new UIWatcher()
 
@@ -65,7 +70,6 @@ describe "UIWatcher", ->
 
   describe "when a package global file changes", ->
     beforeEach ->
-      atom.packages.packageDirPaths.push path.join(__dirname, 'fixtures')
       atom.config.set('core.themes', ["theme-with-ui-variables", "theme-with-multiple-imported-files"])
 
       waitsForPromise ->
