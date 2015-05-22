@@ -3,7 +3,7 @@
 This live reloads the Atom `.less` files. You edit styles and they are magically
 reflected in any running Atom windows. Magic! :tophat: :sparkles: :rabbit2:
 
-Installed by default on Atom windows running in dev mode. Use `cmd+shift+o` to
+Installed by default on Atom windows running in dev mode. Use the "Application: Open Dev" command to
 open a new dev mode window.
 
 Use `meta-shift-ctrl-r` to reload all core and package stylesheets.
