@@ -7,7 +7,7 @@ Watcher = require './watcher'
 module.exports =
 class PackageWatcher extends Watcher
   @supportsPackage: (pack, type) ->
-    return true if pack.getType() == type and pack.getStylesheetPaths().length
+    return true if pack.getType() is type and pack.getStylesheetPaths().length
     false
 
   constructor: (@pack) ->
