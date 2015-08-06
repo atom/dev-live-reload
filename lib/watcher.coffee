@@ -1,4 +1,4 @@
-{File, Directory} = require 'pathwatcher'
+{File, Directory} = require 'atom'
 {CompositeDisposable, Emitter} = require 'atom'
 path = require 'path'
 
