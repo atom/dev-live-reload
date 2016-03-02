@@ -13,7 +13,7 @@ module.exports =
       activatedDisposable.dispose()
 
     @commandDisposable = atom.commands.add 'atom-workspace', 'dev-live-reload:reload-all', ->
-      uiWatcher.reloadAll()
+      uiWatcher?.reloadAll()
 
   deactivate: ->
     @commandDisposable?.dispose()
