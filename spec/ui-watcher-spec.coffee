@@ -2,10 +2,8 @@ _ = require 'underscore-plus'
 path = require 'path'
 
 UIWatcher = require '../lib/ui-watcher'
-PackageWatcher = require '../lib/package-watcher'
 
 describe "UIWatcher", ->
-  themeManager = null
   uiWatcher = null
 
   beforeEach ->

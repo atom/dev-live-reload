@@ -1,6 +1,5 @@
 _ = require 'underscore-plus'
 fs = require 'fs-plus'
-path = require 'path'
 
 Watcher = require './watcher'
 
