@@ -8,8 +8,6 @@ module.exports =
     uiWatcher = null
     activatedDisposable = atom.packages.onDidActivateInitialPackages ->
       uiWatcher = new UIWatcher(themeManager: atom.themes)
-      themes = Object.keys(uiWatcher.watchedThemes)
-      packages = Object.keys(uiWatcher.watchedPackages)
       activatedDisposable.dispose()
 
     @commandDisposable = atom.commands.add 'atom-workspace', 'dev-live-reload:reload-all', ->

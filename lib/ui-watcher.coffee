@@ -26,8 +26,6 @@ class UIWatcher
       # Rewatch everything!
       @watchTheme(theme) for theme in atom.themes.getActiveThemes()
 
-      themes = Object.keys(@watchedThemes)
-
       null
 
   watchTheme: (theme) ->
