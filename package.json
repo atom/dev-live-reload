@@ -6,7 +6,7 @@
   "repository": "https://github.com/atom/dev-live-reload",
   "license": "MIT",
   "dependencies": {
-    "fs-plus": "2.x",
+    "fs-plus": "^3.0.0",
     "underscore-plus": "1.x"
   },
   "engines": {
