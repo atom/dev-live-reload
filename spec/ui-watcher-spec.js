@@ -1,4 +1,3 @@
-const _ = require('underscore-plus')
 const path = require('path')
 
 const UIWatcher = require('../lib/ui-watcher')
@@ -34,11 +33,13 @@ describe('UIWatcher', () => {
     await atom.packages.activatePackage(packagePath)
     uiWatcher = new UIWatcher()
 
-    expect(_.last(uiWatcher.watchers).entities.length).toBe(4)
-    expect(_.last(uiWatcher.watchers).entities[0].getPath()).toBe(path.join(packagePath, 'styles'))
-    expect(_.last(uiWatcher.watchers).entities[1].getPath()).toBe(path.join(packagePath, 'styles', '3.css'))
-    expect(_.last(uiWatcher.watchers).entities[2].getPath()).toBe(path.join(packagePath, 'styles', 'sub', '1.css'))
-    expect(_.last(uiWatcher.watchers).entities[3].getPath()).toBe(path.join(packagePath, 'styles', 'sub', '2.less'))
+    const lastWatcher = uiWatcher.watchers[uiWatcher.watchers.length - 1]
+
+    expect(lastWatcher.entities.length).toBe(4)
+    expect(lastWatcher.entities[0].getPath()).toBe(path.join(packagePath, 'styles'))
+    expect(lastWatcher.entities[1].getPath()).toBe(path.join(packagePath, 'styles', '3.css'))
+    expect(lastWatcher.entities[2].getPath()).toBe(path.join(packagePath, 'styles', 'sub', '1.css'))
+    expect(lastWatcher.entities[3].getPath()).toBe(path.join(packagePath, 'styles', 'sub', '2.less'))
   })
 
   describe('when a package stylesheet file changes', async () => {
@@ -51,7 +52,7 @@ describe('UIWatcher', () => {
       const pack = atom.packages.getActivePackages()[0]
       spyOn(pack, 'reloadStylesheets')
 
-      _.last(uiWatcher.watchers).entities[1].emitter.emit('did-change')
+      uiWatcher.watchers[uiWatcher.watchers.length - 1].entities[1].emitter.emit('did-change')
 
       expect(pack.reloadStylesheets).toHaveBeenCalled()
     })
@@ -84,7 +85,7 @@ describe('UIWatcher', () => {
         spyOn(theme, 'reloadStylesheets')
       }
 
-      for (const entity of uiWatcher.watchedThemes['theme-with-multiple-imported-files'].entities) {
+      for (const entity of uiWatcher.watchedThemes.get('theme-with-multiple-imported-files').entities) {
         if (entity.getPath().indexOf('variables') > -1) varEntity = entity
       }
       varEntity.emitter.emit('did-change')
@@ -110,7 +111,7 @@ describe('UIWatcher', () => {
       spyOn(pack, 'reloadStylesheets')
       spyOn(atom.themes, 'reloadBaseStylesheets')
 
-      const watcher = uiWatcher.watchedThemes['theme-with-index-less']
+      const watcher = uiWatcher.watchedThemes.get('theme-with-index-less')
 
       expect(watcher.entities.length).toBe(1)
 
@@ -136,7 +137,7 @@ describe('UIWatcher', () => {
       spyOn(pack, 'reloadStylesheets')
       spyOn(atom.themes, 'reloadBaseStylesheets')
 
-      const watcher = uiWatcher.watchedThemes['theme-with-multiple-imported-files']
+      const watcher = uiWatcher.watchedThemes.get('theme-with-multiple-imported-files')
 
       expect(watcher.entities.length).toBe(6)
 
@@ -144,7 +145,7 @@ describe('UIWatcher', () => {
       expect(pack.reloadStylesheets).toHaveBeenCalled()
       expect(atom.themes.reloadBaseStylesheets).not.toHaveBeenCalled()
 
-      _.last(watcher.entities).emitter.emit('did-change')
+      watcher.entities[watcher.entities.length - 1].emitter.emit('did-change')
       expect(atom.themes.reloadBaseStylesheets).toHaveBeenCalled()
     })
 
@@ -159,14 +160,14 @@ describe('UIWatcher', () => {
       jasmine.useRealClock()
 
       atom.config.set('core.themes', ['theme-with-syntax-variables', 'theme-with-package-file'])
-      await conditionPromise(() => uiWatcher.watchedThemes['theme-with-package-file'])
+      await conditionPromise(() => uiWatcher.watchedThemes.get('theme-with-package-file'))
 
       pack = atom.themes.getActiveThemes()[0]
       spyOn(pack, 'reloadStylesheets')
 
       expect(pack.name).toBe('theme-with-package-file')
 
-      const watcher = uiWatcher.watchedThemes['theme-with-package-file']
+      const watcher = uiWatcher.watchedThemes.get('theme-with-package-file')
       watcher.entities[2].emitter.emit('did-change')
       expect(pack.reloadStylesheets).toHaveBeenCalled()
     })
