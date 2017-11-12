@@ -1,4 +1,3 @@
-const _ = require('underscore-plus')
 const path = require('path')
 
 const UIWatcher = require('../lib/ui-watcher')
@@ -34,11 +33,13 @@ describe('UIWatcher', () => {
     await atom.packages.activatePackage(packagePath)
     uiWatcher = new UIWatcher()
 
-    expect(_.last(uiWatcher.watchers).entities.length).toBe(4)
-    expect(_.last(uiWatcher.watchers).entities[0].getPath()).toBe(path.join(packagePath, 'styles'))
-    expect(_.last(uiWatcher.watchers).entities[1].getPath()).toBe(path.join(packagePath, 'styles', '3.css'))
-    expect(_.last(uiWatcher.watchers).entities[2].getPath()).toBe(path.join(packagePath, 'styles', 'sub', '1.css'))
-    expect(_.last(uiWatcher.watchers).entities[3].getPath()).toBe(path.join(packagePath, 'styles', 'sub', '2.less'))
+    const lastWatcher = uiWatcher.watchers[uiWatcher.watchers.length - 1]
+
+    expect(lastWatcher.entities.length).toBe(4)
+    expect(lastWatcher.entities[0].getPath()).toBe(path.join(packagePath, 'styles'))
+    expect(lastWatcher.entities[1].getPath()).toBe(path.join(packagePath, 'styles', '3.css'))
+    expect(lastWatcher.entities[2].getPath()).toBe(path.join(packagePath, 'styles', 'sub', '1.css'))
+    expect(lastWatcher.entities[3].getPath()).toBe(path.join(packagePath, 'styles', 'sub', '2.less'))
   })
 
   describe('when a package stylesheet file changes', async () => {
@@ -51,7 +52,7 @@ describe('UIWatcher', () => {
       const pack = atom.packages.getActivePackages()[0]
       spyOn(pack, 'reloadStylesheets')
 
-      _.last(uiWatcher.watchers).entities[1].emitter.emit('did-change')
+      uiWatcher.watchers[uiWatcher.watchers.length - 1].entities[1].emitter.emit('did-change')
 
       expect(pack.reloadStylesheets).toHaveBeenCalled()
     })
@@ -144,7 +145,7 @@ describe('UIWatcher', () => {
       expect(pack.reloadStylesheets).toHaveBeenCalled()
       expect(atom.themes.reloadBaseStylesheets).not.toHaveBeenCalled()
 
-      _.last(watcher.entities).emitter.emit('did-change')
+      watcher.entities[watcher.entities.length - 1].emitter.emit('did-change')
       expect(atom.themes.reloadBaseStylesheets).toHaveBeenCalled()
     })
 
