@@ -3,9 +3,9 @@ const path = require('path')
 
 const UIWatcher = require('../lib/ui-watcher')
 
-const {it, fit, ffit, afterEach, beforeEach, conditionPromise} = require('./async-spec-helpers')
+const {it, fit, ffit, afterEach, beforeEach, conditionPromise} = require('./async-spec-helpers') // eslint-disable-line no-unused-vars
 
-describe("UIWatcher", () => {
+describe('UIWatcher', () => {
   let uiWatcher = null
 
   beforeEach(() => atom.packages.packageDirPaths.push(path.join(__dirname, 'fixtures')))
@@ -18,7 +18,7 @@ describe("UIWatcher", () => {
       uiWatcher = new UIWatcher()
     })
 
-    it("reloads all the base styles", () => {
+    it('reloads all the base styles', () => {
       spyOn(atom.themes, 'reloadBaseStylesheets')
 
       expect(uiWatcher.baseTheme.entities[0].getPath()).toContain(`${path.sep}static${path.sep}`)
@@ -41,13 +41,13 @@ describe("UIWatcher", () => {
     expect(_.last(uiWatcher.watchers).entities[3].getPath()).toBe(path.join(packagePath, 'styles', 'sub', '2.less'))
   })
 
-  describe("when a package stylesheet file changes", async () => {
+  describe('when a package stylesheet file changes', async () => {
     beforeEach(async () => {
       await atom.packages.activatePackage(path.join(__dirname, 'fixtures', 'package-with-styles-manifest'))
       uiWatcher = new UIWatcher()
     })
 
-    it("reloads all package styles", () => {
+    it('reloads all package styles', () => {
       const pack = atom.packages.getActivePackages()[0]
       spyOn(pack, 'reloadStylesheets')
 
@@ -57,20 +57,20 @@ describe("UIWatcher", () => {
     })
   })
 
-  describe("when a package does not have a stylesheet", () => {
+  describe('when a package does not have a stylesheet', () => {
     beforeEach(async () => {
-      await atom.packages.activatePackage("package-with-index")
+      await atom.packages.activatePackage('package-with-index')
       uiWatcher = new UIWatcher()
     })
 
-    it("does not create a PackageWatcher", () => {
+    it('does not create a PackageWatcher', () => {
       expect(uiWatcher.watchedPackages['package-with-index']).toBeUndefined()
     })
   })
 
-  describe("when a package global file changes", () => {
+  describe('when a package global file changes', () => {
     beforeEach(async () => {
-      atom.config.set('core.themes', ["theme-with-ui-variables", "theme-with-multiple-imported-files"])
+      atom.config.set('core.themes', ['theme-with-ui-variables', 'theme-with-multiple-imported-files'])
 
       await atom.themes.activateThemes()
       uiWatcher = new UIWatcher()
@@ -78,7 +78,7 @@ describe("UIWatcher", () => {
 
     afterEach(() => atom.themes.deactivateThemes())
 
-    it("reloads every package when the variables file changes", () => {
+    it('reloads every package when the variables file changes', () => {
       let varEntity
       for (const theme of atom.themes.getActiveThemes()) {
         spyOn(theme, 'reloadStylesheets')
@@ -95,10 +95,10 @@ describe("UIWatcher", () => {
     })
   })
 
-  describe("minimal theme packages", () => {
+  describe('minimal theme packages', () => {
     let pack = null
     beforeEach(async () => {
-      atom.config.set('core.themes', ["theme-with-syntax-variables", "theme-with-index-less"])
+      atom.config.set('core.themes', ['theme-with-syntax-variables', 'theme-with-index-less'])
       await atom.themes.activateThemes()
       uiWatcher = new UIWatcher()
       pack = atom.themes.getActiveThemes()[0]
@@ -106,7 +106,7 @@ describe("UIWatcher", () => {
 
     afterEach(() => atom.themes.deactivateThemes())
 
-    it("watches themes without a styles directory", () => {
+    it('watches themes without a styles directory', () => {
       spyOn(pack, 'reloadStylesheets')
       spyOn(atom.themes, 'reloadBaseStylesheets')
 
@@ -120,10 +120,10 @@ describe("UIWatcher", () => {
     })
   })
 
-  describe("theme packages", () => {
+  describe('theme packages', () => {
     let pack = null
     beforeEach(async () => {
-      atom.config.set('core.themes', ["theme-with-syntax-variables", "theme-with-multiple-imported-files"])
+      atom.config.set('core.themes', ['theme-with-syntax-variables', 'theme-with-multiple-imported-files'])
 
       await atom.themes.activateThemes()
       uiWatcher = new UIWatcher()
@@ -132,7 +132,7 @@ describe("UIWatcher", () => {
 
     afterEach(() => atom.themes.deactivateThemes())
 
-    it("reloads the theme when anything within the theme changes", () => {
+    it('reloads the theme when anything within the theme changes', () => {
       spyOn(pack, 'reloadStylesheets')
       spyOn(atom.themes, 'reloadBaseStylesheets')
 
@@ -148,25 +148,25 @@ describe("UIWatcher", () => {
       expect(atom.themes.reloadBaseStylesheets).toHaveBeenCalled()
     })
 
-    it("unwatches when a theme is deactivated", async () => {
+    it('unwatches when a theme is deactivated', async () => {
       jasmine.useRealClock()
 
       atom.config.set('core.themes', [])
-      await conditionPromise(() => !uiWatcher.watchedThemes["theme-with-multiple-imported-files"])
+      await conditionPromise(() => !uiWatcher.watchedThemes['theme-with-multiple-imported-files'])
     })
 
-    it("watches a new theme when it is deactivated", async () => {
+    it('watches a new theme when it is deactivated', async () => {
       jasmine.useRealClock()
 
-      atom.config.set('core.themes', ["theme-with-syntax-variables", "theme-with-package-file"])
-      await conditionPromise(() => uiWatcher.watchedThemes["theme-with-package-file"])
+      atom.config.set('core.themes', ['theme-with-syntax-variables', 'theme-with-package-file'])
+      await conditionPromise(() => uiWatcher.watchedThemes['theme-with-package-file'])
 
       pack = atom.themes.getActiveThemes()[0]
       spyOn(pack, 'reloadStylesheets')
 
-      expect(pack.name).toBe("theme-with-package-file")
+      expect(pack.name).toBe('theme-with-package-file')
 
-      const watcher = uiWatcher.watchedThemes["theme-with-package-file"]
+      const watcher = uiWatcher.watchedThemes['theme-with-package-file']
       watcher.entities[2].emitter.emit('did-change')
       expect(pack.reloadStylesheets).toHaveBeenCalled()
     })
