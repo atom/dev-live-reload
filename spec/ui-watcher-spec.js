@@ -96,6 +96,39 @@ describe('UIWatcher', () => {
     })
   })
 
+  describe('watcher lifecycle', () => {
+    it('starts watching a package if it is activated after initial startup', async () => {
+      uiWatcher = new UIWatcher()
+      expect(uiWatcher.watchedPackages.size).toBe(0)
+
+      await atom.packages.activatePackage(path.join(__dirname, 'fixtures', 'package-with-styles-folder'))
+      expect(uiWatcher.watchedPackages.get('package-with-styles-folder')).not.toBeUndefined()
+    })
+
+    it('unwatches a package after it is deactivated', async () => {
+      await atom.packages.activatePackage(path.join(__dirname, 'fixtures', 'package-with-styles-folder'))
+      uiWatcher = new UIWatcher()
+      const watcher = uiWatcher.watchedPackages.get('package-with-styles-folder')
+      expect(watcher).not.toBeUndefined()
+
+      const watcherDestructionSpy = jasmine.createSpy('watcher-on-did-destroy')
+      watcher.onDidDestroy(watcherDestructionSpy)
+
+      await atom.packages.deactivatePackage('package-with-styles-folder')
+      expect(uiWatcher.watchedPackages.get('package-with-styles-folder')).toBeUndefined()
+      expect(uiWatcher.watchedPackages.size).toBe(0)
+      expect(watcherDestructionSpy).toHaveBeenCalled()
+    })
+
+    it('does not watch activated packages after the UI watcher has been destroyed', async () => {
+      uiWatcher = new UIWatcher()
+      uiWatcher.destroy()
+
+      await atom.packages.activatePackage(path.join(__dirname, 'fixtures', 'package-with-styles-folder'))
+      expect(uiWatcher.watchedPackages.size).toBe(0)
+    })
+  })
+
   describe('minimal theme packages', () => {
     let pack = null
     beforeEach(async () => {
