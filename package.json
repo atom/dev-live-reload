@@ -1,7 +1,7 @@
 {
   "name": "dev-live-reload",
   "main": "./lib/main",
-  "version": "0.48.0",
+  "version": "0.48.1",
   "description": "Live reload atom themes and packages.",
   "repository": "https://github.com/atom/dev-live-reload",
   "license": "MIT",
