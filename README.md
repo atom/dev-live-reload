@@ -1,3 +1,7 @@
+### This package is now a part of the [core Atom repository](https://github.com/atom/atom/tree/master/packages/dev-live-reload), please direct all issues and pull requests there in the future!
+
+---
+
 # Dev Live Reload package
 [![OS X Build Status](https://travis-ci.org/atom/dev-live-reload.svg?branch=master)](https://travis-ci.org/atom/dev-live-reload) [![Windows Build Status](https://ci.appveyor.com/api/projects/status/g3sd27ylba1fun1v/branch/master?svg=true)](https://ci.appveyor.com/project/Atom/dev-live-reload/branch/master) [![Dependency Status](https://david-dm.org/atom/dev-live-reload.svg)](https://david-dm.org/atom/dev-live-reload)
 
